@@ -20,6 +20,7 @@ const userSchema = mongoose.Schema(
     password: {
       type: String,
       required: true,
+      select: false
     },
   },
   { timestamps: true },
@@ -61,7 +62,7 @@ userSchema.statics.login = async function (userData) {
     throw Error("All fields are required.");
   }
 
-  const user = await this.findOne({ email });
+  const user = await this.findOne({ email }).select("+password");
 
   if (!user) {
     throw Error("That email is not registered.");

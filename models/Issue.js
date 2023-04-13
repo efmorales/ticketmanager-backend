@@ -15,16 +15,21 @@ const IssueSchema = new Schema({
     enum: ['open', 'in_progress', 'closed'],
     default: 'open'
   },
+  priority: {
+    type: String,
+    enum: ['low', 'medium', 'high'],
+    default: 'medium'
+  },
   project: {
     type: Schema.Types.ObjectId,
     ref: 'Project',
     required: true
   },
-  assignedTo: {
+  assignees: [{
     type: Schema.Types.ObjectId,
     ref: 'User'
-  },
-  // Add any additional fields you need for your issues
-});
+  }],
+  // Add any additional fields after here
+}, { timestamps: true });
 
 module.exports = mongoose.model('Issue', IssueSchema);

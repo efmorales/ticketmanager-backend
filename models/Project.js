@@ -16,7 +16,7 @@ const ProjectSchema = new Schema({
       ref: 'User'
     }
   ],
-  // Add any additional fields you need for your projects
-});
+  // Add any additional fields after here
+}, { timestamps: true });
 
 module.exports = mongoose.model('Project', ProjectSchema);

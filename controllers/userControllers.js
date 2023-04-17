@@ -17,7 +17,7 @@ const getAllUsers = async (req, res) => {
 
 const registerUser = async (req, res) => {
   try {
-    const { _id, fName, lName, email } = await User.register(req.body);
+    const { _id, name, email } = await User.register(req.body);
 
     const token = generateToken(_id);
 
@@ -25,8 +25,7 @@ const registerUser = async (req, res) => {
       success: true,
       message: "New user registered!",
       user: {
-        fName,
-        lName,
+        name,
         email,
       },
       token,
@@ -38,7 +37,7 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
-    const { _id, fName, lName, email } = await User.login(req.body);
+    const { _id, name, email } = await User.login(req.body);
 
     const token = generateToken(_id);
 
@@ -46,8 +45,7 @@ const loginUser = async (req, res) => {
       success: true,
       message: "User logged in!",
       user: {
-        fName,
-        lName,
+        name,
         email,
       },
       token,

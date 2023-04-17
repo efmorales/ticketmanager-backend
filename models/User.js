@@ -3,11 +3,7 @@ const bcrypt = require("bcrypt");
 
 const userSchema = mongoose.Schema(
   {
-    fName: {
-      type: String,
-      required: true,
-    },
-    lName: {
+    name: {
       type: String,
       required: true,
     },
@@ -29,23 +25,22 @@ const userSchema = mongoose.Schema(
 
 // ----- User registration method -----
 userSchema.statics.register = async function (newUserData) {
-  const { fName, lName, email, password } = newUserData;
+  const { name, email, password } = newUserData;
 
-  if (!fName || !lName || !email || !password) {
+  if (!name || !email || !password) {
     throw Error("All fields are required.");
   }
 
   const userExists = await this.findOne({ email });
 
   if (userExists) {
-    throw Error("Email already in use. Try a different one or log in.");
+    throw Error("Email already in use.");
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const newUser = await this.create({
-    fName,
-    lName,
+    name,
     email,
     password: hashedPassword,
   });

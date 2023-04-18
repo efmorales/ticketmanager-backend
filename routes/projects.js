@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const authenticate = require("../middleware/authenticate");
 
 const {
     getOneProject,
@@ -9,10 +10,10 @@ const {
     deleteOneProject
 } = require("../controllers/projectControllers");
 
-router.get("/", getAllProjects);
-router.get("/:id", getOneProject);
-router.post("/", newProject);
-router.put("/:id", editOneProject);
-router.delete("/:id", deleteOneProject);
+router.get("/", authenticate, getAllProjects);
+router.get("/:id", authenticate, getOneProject);
+router.post("/", authenticate, newProject);
+router.put("/:id", authenticate, editOneProject);
+router.delete("/:id", authenticate, deleteOneProject);
 
 module.exports = router;

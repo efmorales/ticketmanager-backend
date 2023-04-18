@@ -17,7 +17,7 @@ const issuesRouter = require("./routes/issues");
 
 const app = express();
 
-app.use(cors({ origin: ["http://localhost:3000"], credentials: true }));
+app.use(cors({ origin: ["http://localhost:3001"], credentials: true }));
 app.options("*", cors());
 
 // view engine setup

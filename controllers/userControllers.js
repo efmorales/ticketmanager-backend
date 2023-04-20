@@ -25,6 +25,7 @@ const registerUser = async (req, res) => {
       success: true,
       message: "New user registered!",
       user: {
+        id: _id,
         name,
         email,
       },
@@ -45,6 +46,7 @@ const loginUser = async (req, res) => {
       success: true,
       message: "User logged in!",
       user: {
+        id: _id,
         name,
         email,
       },
@@ -56,4 +58,3 @@ const loginUser = async (req, res) => {
 };
 
 module.exports = { getAllUsers, registerUser, loginUser };
-

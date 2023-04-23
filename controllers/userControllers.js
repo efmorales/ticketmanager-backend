@@ -57,7 +57,40 @@ const loginUser = async (req, res) => {
   }
 };
 
-const updateUser = async (req, res) => {};
+const getUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    res.send({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    res.send({
+      success: false,
+      error: error.message
+    });
+  }
+};
+
+const updateUser = async (req, res) => {
+  try {
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: req.body.id },
+      req.body.updates,
+      { new: true }
+    );
+
+    res.send({
+      success: true,
+      updatedUser,
+    });
+  } catch (error) {
+    res.send({
+      success: false,
+      error: error.message
+    });
+  }
+};
 
 const verifyUser = async (req, res) => {
   try {
@@ -82,4 +115,5 @@ module.exports = {
   loginUser,
   updateUser,
   verifyUser,
+  getUser,
 };

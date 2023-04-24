@@ -38,7 +38,7 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
-    const { _id, name, email } = await User.login(req.body);
+    const { _id, name, email, bio } = await User.login(req.body);
 
     const token = generateToken(_id);
 
@@ -49,6 +49,7 @@ const loginUser = async (req, res) => {
         id: _id,
         name,
         email,
+        bio
       },
       token,
     });

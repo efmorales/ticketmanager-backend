@@ -57,4 +57,28 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, registerUser, loginUser };
+const searchUsers = async (req, res, next) => {
+  try {
+    const name = req.query.name;
+    const regex = new RegExp(name, "i"); // case-insensitive search
+    const users = await User.find({ name: { $regex: regex } }).exec();
+    res.json(users);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getUserById = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (user) {
+      res.json(user);
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { getAllUsers, registerUser, loginUser, searchUsers, getUserById };

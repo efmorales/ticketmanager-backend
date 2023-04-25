@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const IssueSchema = new Schema({
+const TicketSchema = new Schema({
   title: {
     type: String,
     required: true
@@ -20,16 +20,21 @@ const IssueSchema = new Schema({
     enum: ['low', 'medium', 'high'],
     default: 'medium'
   },
-  project: {
-    type: Schema.Types.ObjectId,
-    ref: 'Project',
-    required: true
+  projectId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Project",
+    required: true,
   },
-  assignees: [{
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  assignedTo: [{
     type: Schema.Types.ObjectId,
     ref: 'User'
   }],
   // Add any additional fields after here
 }, { timestamps: true });
 
-module.exports = mongoose.model('Issue', IssueSchema);
+module.exports = mongoose.model('Ticket', TicketSchema);

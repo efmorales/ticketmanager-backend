@@ -1,0 +1,20 @@
+const express = require("express");
+const router = express.Router();
+const authenticate = require("../middleware/authenticate");
+
+const {
+    createTicket,
+    getTicketsByProject,
+    getTicketById,
+    updateTicket,
+    deleteTicket,
+} = require("../controllers/ticketControllers");
+
+
+router.post("/", authenticate, createTicket);
+router.get("/project/:projectId", authenticate, getTicketsByProject);
+router.get("/:ticketId", authenticate, getTicketById);
+router.put("/:ticketId", authenticate, updateTicket);
+router.delete("/:ticketId", authenticate, deleteTicket);
+
+module.exports = router;

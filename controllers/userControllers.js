@@ -49,7 +49,7 @@ const loginUser = async (req, res) => {
         id: _id,
         name,
         email,
-        bio
+        bio,
       },
       token,
     });
@@ -68,7 +68,7 @@ const getUser = async (req, res) => {
   } catch (error) {
     res.send({
       success: false,
-      error: error.message
+      error: error.message,
     });
   }
 };
@@ -79,7 +79,9 @@ const updateUser = async (req, res) => {
       { _id: req.body.id },
       req.body.updates,
       { new: true }
-    );
+    )
+      .select("_id name email bio")
+      .lean();
 
     res.send({
       success: true,
@@ -88,7 +90,7 @@ const updateUser = async (req, res) => {
   } catch (error) {
     res.send({
       success: false,
-      error: error.message
+      error: error,
     });
   }
 };
@@ -97,7 +99,9 @@ const verifyUser = async (req, res) => {
   try {
     const { id } = verifyToken(req.header("token"));
 
-    const user = await User.findOne({ _id: id });
+    const user = await User.findOne({ _id: id })
+      .select("_id name email bio")
+      .lean();
 
     res.json({
       user,

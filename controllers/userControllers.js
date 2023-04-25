@@ -1,5 +1,5 @@
 const User = require("../models/User");
-const { generateToken } = require("../config/auth");
+const { generateToken, verifyToken } = require("../config/auth");
 
 const getAllUsers = async (req, res) => {
   try {
@@ -57,6 +57,25 @@ const loginUser = async (req, res) => {
   }
 };
 
+const updateUser = async (req, res) => {};
+
+const verifyUser = async (req, res) => {
+  try {
+    const { id } = verifyToken(req.header("token"));
+
+    const user = await User.findOne({ _id: id });
+
+    res.json({
+      user,
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      error,
+    });
+  }
+};
+
 const searchUsers = async (req, res, next) => {
   try {
     const name = req.query.name;
@@ -81,4 +100,10 @@ const getUserById = async (req, res, next) => {
   }
 };
 
-module.exports = { getAllUsers, registerUser, loginUser, searchUsers, getUserById };
+module.exports = {
+  getAllUsers,
+  registerUser,
+  loginUser, searchUsers, getUserById,
+  updateUser,
+  verifyUser,
+};

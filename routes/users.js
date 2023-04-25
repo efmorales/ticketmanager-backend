@@ -8,6 +8,8 @@ const {
   loginUser,
   searchUsers,
   getUserById,
+  updateUser,
+  verifyUser,
 } = require("../controllers/userControllers");
 
 router.get("/", getAllUsers);
@@ -18,7 +20,11 @@ router.post("/register", registerUser);
 
 router.post("/login", loginUser);
 
+router.get("/verify-user", verifyUser);
+
 router.get("/:id", authenticate, getUserById);
+
+router.put("/user", updateUser);
 
 
 module.exports = router;

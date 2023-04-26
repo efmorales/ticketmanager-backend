@@ -9,24 +9,40 @@ const getOneProject = async (req, res) => {
     }
 };
 
-const getAllProjects = async (req, res) => {
+const getAllProjects = async (req, res, next) => {
     try {
-        const projects = await Project.find();
-        res.status(200).json(projects);
+        // Find projects where the user is a team member
+        const projects = await Project.find({ members: req.userId }).exec();
+        res.json(projects);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        next(error);
     }
 };
 
 const newProject = async (req, res) => {
     try {
-        const project = new Project(req.body);
+        const { name, description, members } = req.body;
+        const createdBy = req.userId; // Get the user ID from the request object
+
+        // Check if the members array exists in the request body
+        const combinedMembers = members
+            ? [...new Set([...members, createdBy])] // Combine the existing members array with the createdBy user ID
+            : [createdBy]; // Create a new array containing just the createdBy user ID
+
+        const project = new Project({
+            name,
+            description,
+            createdBy,
+            members: combinedMembers, // Set the members array to the combined array
+        });
+
         const savedProject = await project.save();
         res.status(201).json(savedProject);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 const editOneProject = async (req, res) => {
     try {
@@ -46,10 +62,25 @@ const deleteOneProject = async (req, res) => {
     }
 };
 
+const getProjectMembers = async (req, res) => {
+    try {
+        const project = await Project.findById(req.params.id).populate("members");
+    
+        if (!project) {
+          return res.status(404).json({ success: false, error: "Project not found" });
+        }
+    
+        res.status(200).json({ success: true, members: project.members });
+      } catch (error) {
+        res.status(500).json({ success: false, error: "Internal Server Error" });
+      }
+};
+
 module.exports = {
     getOneProject,
     getAllProjects,
     newProject,
     editOneProject,
-    deleteOneProject
+    deleteOneProject,
+    getProjectMembers
 };

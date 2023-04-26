@@ -13,11 +13,11 @@ mongooseConnect();
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const projectsRouter = require("./routes/projects");
-const issuesRouter = require("./routes/issues");
+const ticketsRouter = require("./routes/tickets");
 
 const app = express();
 
-app.use(cors({ origin: ["http://localhost:3000"], credentials: true }));
+app.use(cors({ origin: ["http://localhost:3001"], credentials: true }));
 app.options("*", cors());
 
 // view engine setup
@@ -33,7 +33,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/projects", projectsRouter);
-app.use("/issues", issuesRouter);
+app.use("/tickets", ticketsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

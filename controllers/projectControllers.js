@@ -62,10 +62,25 @@ const deleteOneProject = async (req, res) => {
     }
 };
 
+const getProjectMembers = async (req, res) => {
+    try {
+        const project = await Project.findById(req.params.id).populate("members");
+    
+        if (!project) {
+          return res.status(404).json({ success: false, error: "Project not found" });
+        }
+    
+        res.status(200).json({ success: true, members: project.members });
+      } catch (error) {
+        res.status(500).json({ success: false, error: "Internal Server Error" });
+      }
+};
+
 module.exports = {
     getOneProject,
     getAllProjects,
     newProject,
     editOneProject,
-    deleteOneProject
+    deleteOneProject,
+    getProjectMembers
 };

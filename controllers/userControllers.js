@@ -38,7 +38,7 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
-    const { _id, name, email } = await User.login(req.body);
+    const { _id, name, email, bio } = await User.login(req.body);
 
     const token = generateToken(_id);
 
@@ -49,6 +49,7 @@ const loginUser = async (req, res) => {
         id: _id,
         name,
         email,
+        bio,
       },
       token,
     });
@@ -57,13 +58,50 @@ const loginUser = async (req, res) => {
   }
 };
 
-const updateUser = async (req, res) => {};
+const getUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    res.send({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    res.send({
+      success: false,
+      error: error.message,
+    });
+  }
+};
+
+const updateUser = async (req, res) => {
+  try {
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: req.body.id },
+      req.body.updates,
+      { new: true }
+    )
+      .select("_id name email bio")
+      .lean();
+
+    res.send({
+      success: true,
+      updatedUser,
+    });
+  } catch (error) {
+    res.send({
+      success: false,
+      error: error,
+    });
+  }
+};
 
 const verifyUser = async (req, res) => {
   try {
     const { id } = verifyToken(req.header("token"));
 
-    const user = await User.findOne({ _id: id });
+    const user = await User.findOne({ _id: id })
+      .select("_id name email bio")
+      .lean();
 
     res.json({
       user,
@@ -106,4 +144,5 @@ module.exports = {
   loginUser, searchUsers, getUserById,
   updateUser,
   verifyUser,
+  getUser,
 };

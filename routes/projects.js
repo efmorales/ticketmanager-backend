@@ -7,10 +7,12 @@ const {
     getAllProjects,
     newProject,
     editOneProject,
-    deleteOneProject
+    deleteOneProject,
+    getProjectMembers
 } = require("../controllers/projectControllers");
 
 router.get("/", authenticate, getAllProjects);
+router.get("/:id/members", authenticate, getProjectMembers);
 router.get("/:id", authenticate, getOneProject);
 router.post("/", authenticate, newProject);
 router.put("/:id", authenticate, editOneProject);

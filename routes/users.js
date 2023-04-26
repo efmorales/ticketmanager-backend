@@ -10,6 +10,7 @@ const {
   getUserById,
   updateUser,
   verifyUser,
+  getUser
 } = require("../controllers/userControllers");
 
 router.get("/", getAllUsers);
@@ -19,6 +20,10 @@ router.get("/search", authenticate, searchUsers);
 router.post("/register", registerUser);
 
 router.post("/login", loginUser);
+
+router.get("/user/:id", getUser);
+
+router.put("/user", updateUser);
 
 router.get("/verify-user", verifyUser);
 

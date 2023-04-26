@@ -7,6 +7,7 @@ const {
   loginUser,
   updateUser,
   verifyUser,
+  getUser
 } = require("../controllers/userControllers");
 
 router.get("/", getAllUsers);
@@ -14,6 +15,8 @@ router.get("/", getAllUsers);
 router.post("/register", registerUser);
 
 router.post("/login", loginUser);
+
+router.get("/user/:id", getUser);
 
 router.put("/user", updateUser);
 

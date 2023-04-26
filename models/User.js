@@ -18,6 +18,7 @@ const userSchema = mongoose.Schema(
       required: true,
       select: false
     },
+    bio: String,
   },
   { timestamps: true },
   { strictQuery: true }

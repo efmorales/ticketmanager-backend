@@ -78,7 +78,7 @@ const updateUser = async (req, res) => {
     const updatedUser = await User.findOneAndUpdate(
       { _id: req.body.id },
       req.body.updates,
-      { new: true }
+      { new: true, runValidators: true }
     )
       .select("_id name email bio")
       .lean();

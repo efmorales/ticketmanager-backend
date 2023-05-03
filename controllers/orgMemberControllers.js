@@ -4,7 +4,7 @@ const User = require("../models/User");
 
 const getAllOrgMembers = async (req, res) => {
   try {
-    const allMembers = await OrgMember.find({parentOrg: req.params.orgId});
+    const allMembers = await OrgMember.find({parentOrg: req.params.orgId}).populate("user");
 
     res.json({
       success: true,
@@ -22,7 +22,13 @@ const registerOrgMember = async (req, res) => {
   const { userId, permissions } = req.body;
   try {
 
-    const newMember = await OrgMember.register(userId, orgId, permissions).select("-__v -id");
+    const exists = await OrgMember.find({ "user": userId }).where({ "parentOrg": orgId });
+
+    if (exists) throw Error("User is already registered as a member.")
+
+    const newMember = await OrgMember.register(userId, orgId, permissions);
+
+    if (newMember.error) throw Error("Cannot add this member.");
 
     res.json({
       success: true,
@@ -36,7 +42,7 @@ const registerOrgMember = async (req, res) => {
 
 const getOrgMember = async (req, res) => {
   try {
-    const member = await OrgMember.findById(req.params.memberId);
+    const member = await OrgMember.findById(req.params.memberId).populate("user");
     res.send({
       success: true,
       member,
@@ -104,6 +110,19 @@ const searchOrgMembers = async (req, res, next) => {
   }
 };
 
+const deleteOrgMember = async (req, res, next) => {
+  const { memberId } = req.params;
+  try {
+    const deleted = await OrgMember.findByIdAndDelete(memberId);
+
+    res.json({
+      success: true,
+      deleted
+    })
+  } catch (error) {
+    res.json({ error: error.message });
+  }
+}
 module.exports = {
   getAllOrgMembers,
   registerOrgMember,
@@ -111,4 +130,5 @@ module.exports = {
   updateOrgMember,
   verifyOrgMember,
   getOrgMember,
+  deleteOrgMember,
 };

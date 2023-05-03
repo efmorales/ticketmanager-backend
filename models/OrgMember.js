@@ -6,6 +6,7 @@ const orgMember = Schema(
   {
     parentOrg: {
       type: Schema.Types.ObjectId,
+      ref: "Organization",
       required: [true, "Members must belong to an organization."],
     },
     user: {
@@ -44,7 +45,9 @@ const orgMember = Schema(
 // });
 
 // TODO: Create index for userId/parentOrg
+
 orgMember.statics.register = async function (userId, orgId, permissions) {
+
   const newMember = await this.create({
     parentOrg: orgId,
     user: userId,

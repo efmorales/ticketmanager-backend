@@ -45,7 +45,7 @@ const registerOrg = async (req, res) => {
 
 const getOrg = async (req, res) => {
   try {
-    const organization = await Organization.findById(req.params.orgId);
+    const organization = await Organization.findById(req.params.orgId).populate("members owner");
     res.send({
       success: true,
       organization,

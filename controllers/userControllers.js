@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const OrgMember = require("../models/OrgMember")
 const { generateToken, verifyToken } = require("../config/auth");
 
 const getAllUsers = async (req, res) => {
@@ -138,6 +139,17 @@ const getUserById = async (req, res, next) => {
   }
 };
 
+const getUserOrgs = async (req, res) => {
+  const { userId } = req.params
+  try {
+    const userOrganizations = await OrgMember.find({ "user": userId }).populate("parentOrg");
+
+    res.json({userOrganizations})
+  } catch (error) {
+    res.json({error})
+  }
+}
+
 module.exports = {
   getAllUsers,
   registerUser,
@@ -145,4 +157,5 @@ module.exports = {
   updateUser,
   verifyUser,
   getUser,
+  getUserOrgs,
 };

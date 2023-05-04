@@ -12,12 +12,14 @@ mongooseConnect();
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
+const organizationsRouter = require("./routes/organizations");
+const orgMembersRouter = require("./routes/orgMembers");
 const projectsRouter = require("./routes/projects");
 const ticketsRouter = require("./routes/tickets");
 
 const app = express();
 
-app.use(cors({ origin: ["http://localhost:3001"], credentials: true }));
+app.use(cors({ origin: ["http://localhost:3000"], credentials: true }));
 app.options("*", cors());
 
 // view engine setup
@@ -30,10 +32,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+// User routes
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/projects", projectsRouter);
 app.use("/tickets", ticketsRouter);
+// Organizations routes
+app.use("/organizations/:orgId/members", orgMembersRouter);
+app.use("/organizations/:orgId/projects", projectsRouter);
+app.use("/organizations/:orgId/tickets", ticketsRouter);
+app.use("/organizations", organizationsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

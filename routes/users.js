@@ -10,7 +10,8 @@ const {
   getUserById,
   updateUser,
   verifyUser,
-  getUser
+  getUser,
+  getUserOrgs,
 } = require("../controllers/userControllers");
 
 router.get("/", getAllUsers);
@@ -30,6 +31,8 @@ router.get("/verify-user", verifyUser);
 router.get("/:id", authenticate, getUserById);
 
 router.put("/user", updateUser);
+
+router.get("/user/organizations/:userId", getUserOrgs);
 
 
 module.exports = router;

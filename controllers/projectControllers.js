@@ -11,9 +11,18 @@ const getOneProject = async (req, res) => {
 
 const getAllProjects = async (req, res, next) => {
     try {
+    if (req.params.orgId) {
+        const projects = await Project.find({
+            organizationRef: req.params.orgId,
+        }).exec();
+        
+        res.json(projects);
+    } else {
         // Find projects where the user is a team member
         const projects = await Project.find({ members: req.userId }).exec();
+
         res.json(projects);
+    }
     } catch (error) {
         next(error);
     }
@@ -28,13 +37,18 @@ const newProject = async (req, res) => {
         const combinedMembers = members
             ? [...new Set([...members, createdBy])] // Combine the existing members array with the createdBy user ID
             : [createdBy]; // Create a new array containing just the createdBy user ID
+        
+        const { orgId } = req.params;
+        const organizationRef = orgId ? orgId : "";
 
         const project = new Project({
             name,
             description,
             createdBy,
             members: combinedMembers, // Set the members array to the combined array
+            organizationRef,
         });
+
 
         const savedProject = await project.save();
         res.status(201).json(savedProject);

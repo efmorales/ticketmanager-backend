@@ -17,11 +17,11 @@ const ProjectSchema = new Schema(
         ref: "User",
       },
     ],
-    issues: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Issue",
-      },
+    tickets: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Ticket'
+        }
     ],
 
     // Add any additional fields after here

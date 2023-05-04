@@ -1,9 +1,16 @@
 const Ticket = require("../models/Ticket");
+const Project = require("../models/Project");
 
 const createTicket = async (req, res) => {
   try {
     const ticket = new Ticket({ ...req.body, createdBy: req.userId });
     const savedTicket = await ticket.save();
+
+    // Update the project's tickets array
+    const project = await Project.findById(ticket.projectId);
+    project.tickets.push(savedTicket._id);
+    await project.save();
+
     res.status(201).json({ success: true, ticket: savedTicket });
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -58,6 +65,11 @@ const deleteTicket = async (req, res) => {
     if (!deletedTicket) {
       return res.status(404).json({ error: "Ticket not found" });
     }
+    // Remove the ticket from the project's tickets array
+    const project = await Project.findById(deletedTicket.projectId);
+    project.tickets.pull(deletedTicket._id);
+    await project.save();
+    
     res.json({ success: true, message: "Ticket deleted" });
   } catch (error) {
     res.status(400).json({ error: error.message });

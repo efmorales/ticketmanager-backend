@@ -16,10 +16,10 @@ const ProjectSchema = new Schema({
             ref: 'User'
         }
     ],
-    issues: [
+    tickets: [
         {
             type: Schema.Types.ObjectId,
-            ref: 'Issue'
+            ref: 'Ticket'
         }
     ],
 

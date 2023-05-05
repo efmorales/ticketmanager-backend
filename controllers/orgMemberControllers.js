@@ -1,10 +1,11 @@
 const OrgMember = require("../models/OrgMember");
 const User = require("../models/User");
 
-
 const getAllOrgMembers = async (req, res) => {
   try {
-    const allMembers = await OrgMember.find({parentOrg: req.params.orgId}).populate("user");
+    const allMembers = await OrgMember.find({
+      parentOrg: req.params.orgId,
+    }).populate("user");
 
     res.json({
       success: true,
@@ -18,15 +19,15 @@ const getAllOrgMembers = async (req, res) => {
 };
 
 const registerOrgMember = async (req, res) => {
-  const { orgId } = req.params;
-  const { userId, permissions } = req.body;
   try {
+    const { orgId, userId } = req.params;
+    const exists = await OrgMember.exists({ user: userId }).where({
+      parentOrg: orgId,
+    });
 
-    const exists = await OrgMember.find({ "user": userId }).where({ "parentOrg": orgId });
+    if ( exists ) throw Error("User is already registered as a member.");
 
-    if (exists) throw Error("User is already registered as a member.")
-
-    const newMember = await OrgMember.register(userId, orgId, permissions);
+    const newMember = await OrgMember.register(userId, orgId);
 
     if (newMember.error) throw Error("Cannot add this member.");
 
@@ -42,7 +43,9 @@ const registerOrgMember = async (req, res) => {
 
 const getOrgMember = async (req, res) => {
   try {
-    const member = await OrgMember.findById(req.params.memberId).populate("user");
+    const member = await OrgMember.findById(req.params.memberId).populate(
+      "user"
+    );
     res.send({
       success: true,
       member,
@@ -61,8 +64,7 @@ const updateOrgMember = async (req, res) => {
       { _id: req.params.memberId },
       req.body,
       { new: true, runValidators: true }
-    )
-      .lean();
+    ).lean();
 
     res.send({
       success: true,
@@ -79,14 +81,11 @@ const updateOrgMember = async (req, res) => {
 // TODO:
 const verifyOrgMember = async (req, res) => {
   // TODO: This might be better as a middleware
-
   // try {
   //   const { id } = verifyToken(req.header("token"));
-
   //   const user = await User.findOne({ _id: id })
   //     .select("_id name email bio")
   //     .lean();
-
   //   res.json({
   //     user,
   //   });
@@ -117,12 +116,12 @@ const deleteOrgMember = async (req, res, next) => {
 
     res.json({
       success: true,
-      deleted
-    })
+      deleted,
+    });
   } catch (error) {
     res.json({ error: error.message });
   }
-}
+};
 module.exports = {
   getAllOrgMembers,
   registerOrgMember,

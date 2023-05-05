@@ -16,7 +16,6 @@ const orgMember = Schema(
     },
     permissions: {
       type: String,
-      required: true,
       enum: ["owner", "super_admin", "admin", "user"],
       default: "user",
     },

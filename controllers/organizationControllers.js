@@ -1,10 +1,6 @@
 const Organization = require("../models/Organization");
 const OrgMember = require("../models/OrgMember");
 
-// // Allow nested routes
-// if (!req.body.thingINeed) req.body.thingINeed = req.params.thingINeed
-// if (!req.body.otherThingINeed) req.body.otherThingINeed = req.params.otherThingINeed
-
 const getAllOrgs = async (req, res) => {
   try {
     const allOrgs = await Organization.find({});

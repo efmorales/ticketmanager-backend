@@ -90,11 +90,27 @@ const getProjectMembers = async (req, res) => {
       }
 };
 
+const getLatestProjects = async (req, res) => {
+    try {
+      const projects = await Project.find({ members: req.userId })
+        .sort({ updatedAt: -1 })
+        .limit(4)
+        .exec();
+      res.json({ success: true, projects });
+    } catch (error) {
+      console.error("Error in getLatestProjects:", error);
+      res.status(500).json({ error: error.message });
+    }
+  };
+  
+  
+
 module.exports = {
     getOneProject,
     getAllProjects,
     newProject,
     editOneProject,
     deleteOneProject,
-    getProjectMembers
+    getProjectMembers,
+    getLatestProjects,
 };

@@ -76,10 +76,22 @@ const deleteTicket = async (req, res) => {
   }
 };
 
+const getAssignedTickets = async (req, res) => {
+  try {
+    const tickets = await Ticket.find({ assignedTo: req.userId }).populate("projectId", "name");
+    res.json({ success: true, tickets });
+  } catch (error) {
+    console.error("Error in getAssignedTickets:", error);
+    res.status(400).json({ error: error.message });
+  }
+};
+
+
 module.exports = {
   createTicket,
   getTicketsByProject,
   getTicketById,
   updateTicket,
   deleteTicket,
+  getAssignedTickets,
 };

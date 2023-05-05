@@ -12,7 +12,7 @@ const {
 
 router.get("/", getAllOrgMembers);
 
-router.post("/", registerOrgMember);
+router.post("/:userId", registerOrgMember);
 
 router.get("/search", searchOrgMembers);
 

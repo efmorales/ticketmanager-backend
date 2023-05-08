@@ -38,17 +38,17 @@ const newProject = async (req, res) => {
             ? [...new Set([...members, createdBy])] // Combine the existing members array with the createdBy user ID
             : [createdBy]; // Create a new array containing just the createdBy user ID
         
-        const { orgId } = req.params;
-        const organizationRef = orgId ? orgId : "";
 
         const project = new Project({
             name,
             description,
             createdBy,
             members: combinedMembers, // Set the members array to the combined array
-            organizationRef,
         });
 
+        if (req.params.orgId) {
+            project.organizationRef = req.params.orgId; 
+        }
 
         const savedProject = await project.save();
         res.status(201).json(savedProject);
